@@ -8,12 +8,24 @@ const toSelect = document.querySelector(".to .select-container select");
 const msg = document.querySelector(".msg");
  
 
+const removeLeadingZeros = (amtVal) => {
+    let i = 0;
+    for(let val of amtVal){
+        if(val != '0'){
+            break;
+        }
+        i++;
+    }
+    return amtVal.substring(i);
+}
+
+
 const updateExchangeRates = async () => {
     let amtVal = amount.value;
     if(amtVal === "" || isNaN(amtVal) || amtVal < 1){
         window.alert("Amount Value should be greater than 1");
-        amtVal = 1;
         amount.value = "1";
+        amtVal = amount.value;
     }
     let fromCountry = fromSelect.value.toLowerCase()
     let toCountry = toSelect.value.toLowerCase()
@@ -22,6 +34,7 @@ const updateExchangeRates = async () => {
     let data = await response.json();
     let rate = data[fromCountry][toCountry];
 
+    amtVal = removeLeadingZeros(amtVal);
     let finalAmount = amtVal * rate;
     msg.innerText = `${amtVal} ${fromSelect.value} = ${finalAmount} ${toSelect.value}`;
 }
