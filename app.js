@@ -6,6 +6,9 @@ const amount = document.querySelector(".amount-container input");
 const fromSelect = document.querySelector(".from .select-container select");
 const toSelect = document.querySelector(".to .select-container select");
 const msg = document.querySelector(".msg");
+
+const AMT_VAL_ERROR = "Amount Value should be greater than 1";
+const AMT_VAL_ERROR_ALPHA = "Input should be numerical only, should not contain any alphabet or special characters";
  
 
 const removeLeadingZeros = (amtVal) => {
@@ -22,8 +25,12 @@ const removeLeadingZeros = (amtVal) => {
 
 const updateExchangeRates = async () => {
     let amtVal = amount.value;
-    if(amtVal === "" || isNaN(amtVal) || amtVal < 1){
-        window.alert("Amount Value should be greater than 1");
+    if(isNaN(amtVal) || amtVal < 1){
+        if(isNaN(amtVal)){
+            window.alert(AMT_VAL_ERROR_ALPHA);
+        }else{
+            window.alert(AMT_VAL_ERROR);
+        }
         amount.value = "1";
         amtVal = amount.value;
     }
@@ -35,6 +42,7 @@ const updateExchangeRates = async () => {
     let rate = data[fromCountry][toCountry];
 
     amtVal = removeLeadingZeros(amtVal);
+    amount.value = amtVal;
     let finalAmount = amtVal * rate;
     msg.innerText = `${amtVal} ${fromSelect.value} = ${finalAmount} ${toSelect.value}`;
 }
